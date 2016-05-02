@@ -1,0 +1,26 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+<body>
+
+<h1>New Location</h1>
+
+<div class = 'pane'>
+<form action="{{ url_for('allRestaurant')}}" method = 'post'>
+
+<dl>
+	<dt>City:</dt>
+		<dd><input type ='text' size='30' name='city'></dd>
+	<dt>Country:</dt>
+		<dd><input type ='text' size='30' name='country'></dd>
+	<dt>Meal type:</dt>
+		<dd><input type ='text' size='30' name='mealType'></dd>		
+</dl>
+
+<input type='submit' value='Create'>
+
+</form>
+</div>
+
+</body>

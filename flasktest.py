@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request,url_for,redirect,flash,jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, RestaurantNear
 from findARestaurant import findARestaurant
 
 app = Flask(__name__)
@@ -39,12 +39,17 @@ def restaurants():
     return render_template('restaurantBasic.html',restaurants=restaurant)
 
 # Task 1: Create route for newMenuItem function here
+@app.route('/restaurants/near')
+def restaurantsNear():
+    restaurant = session.query(RestaurantNear)
+    return render_template('Restaurantnear.html',restaurants=restaurant)
+
 
 @app.route('/restaurants/new', methods=['GET', 'POST'])
 def restaurantNew():
     if request.method == 'POST':
-    	newRestaurant=Restaurant(name=request.form['name'])
-    	session.add(newRestaurant)
+        newRestaurant=Restaurant(name=request.form['name'])
+        session.add(newRestaurant)
         session.commit()
         flash("New Restaurant Added")
         return redirect(url_for('restaurants'))
@@ -133,7 +138,24 @@ def deleteRestaurant(restaurant_id):
     else:
     	return render_template(
     		'deleteRestaurant.html', restaurant=deletedItem)
+@app.route('/restaurants/near/new', methods = ['GET', 'POST'])
+def allRestaurant():
+  if request.method == 'GET':
+  	# RETURN ALL RESTAURANTS IN DATABASE
+        return render_template('enterDetails.html')
 
+  elif request.method == 'POST':
+  	# MAKE A NEW RESTAURANT AND STORE IT IN DATABASE
+    location = request.form['city']+", "+request.form['country']
+    mealType = request.form['mealType']
+    restaurant_info = findARestaurant(mealType, location)
+    if restaurant_info != "No Restaurants Found":
+      restaurant = RestaurantNear(restaurant_name = unicode(restaurant_info['name']), restaurant_address = unicode(restaurant_info['address']), restaurant_image = restaurant_info['image'])
+      session.add(restaurant)
+      session.commit() 
+      return redirect(url_for('restaurantsNear'))
+    else:
+      return jsonify({"error":"No Restaurants Found for %s in %s" % (mealType, location)})
 if __name__ == '__main__':
     app.secret_key='super_secret_key'
     app.debug = True

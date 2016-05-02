@@ -7,10 +7,7 @@
 		<div class = 'header'>
 		<h1>Mr.Singhania Restaurant Management</h1>
 	</div>
-
-	<a href = '{{url_for('restaurantNew') }}'>Create New Restaurant</a>
-	</br>
-	<a href = '{{url_for('restaurantsNear')}}'>Near By Restaurant></a>
+	<a href = '{{url_for('allRestaurant') }}'>Enter Location or MealType</a>
 <div class = 'flash'>
 		      {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -28,18 +25,9 @@
 
 		{% for r in restaurants %}
     <div class = 'nameAndPrice'>
-		<a href='{{url_for('restaurantMenu',restaurant_id = r.id)}}' > <span class = 'name'><p>{{r.name}}</p></span></a>
+		<span class = 'name'><p>{{r.restaurant_name}}</p></span>
+		<span class = 'address'><p>{{r.restaurant_address}}</p></span>
 	</div>
-	</br>
-	<div class = "editdeletepane">
-
-	<a href='{{url_for('editRestaurant',restaurant_id = r.id)}}' >Edit</a>
-	<a href='{{url_for('deleteRestaurant',restaurant_id = r.id )}}' >Delete</a>	
-	</div>
-	</br>
-
-
-
 
 		{% endfor %}
 
